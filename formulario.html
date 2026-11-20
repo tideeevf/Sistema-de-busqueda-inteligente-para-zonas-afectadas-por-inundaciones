@@ -1,0 +1,199 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="formulario.css">
+    <!-- Estilos CSS de Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />   <title>Formulario para Registros</title>
+ </head>
+ <body>
+
+    <div id="mapa" class="mapa" aria-label="Mapa para seleccionar la ubicación"></div>
+    <div id="map-hint" class="map-hint" role="status">Haz clic en el mapa para elegir la ubicación de la comunidad.</div>
+
+    <div class="container" id="panel-formulario" hidden>
+    
+      <div class="header">
+        <h1 class="title">Registro de ayudas</h1>
+        <p class="subtitle">Completa los datos de la comunidad y el reporte.</p>
+        <button type="button" class="btn-cambiar-ubicacion" id="cambiar-ubicacion">Elegir otra ubicación</button>
+      </div>
+    
+      <form class="form-container" id="formulario">
+        <div class="form-grid">
+            <fieldset class="form-section section-location">
+                <legend>1. Datos de Ubicación <span>(¿Dónde ocurre?)</span></legend>
+
+                <div class="container_ubicacion">
+                    <label class="necesidades">Coordenadas de ubicación</label>
+                    <div class="coordenadas-grid">
+                        <div class="coordenada-field">
+                            <label for="latitud">Latitud</label>
+                            <input type="number" value="" id="latitud" step="any" placeholder="Escriba la latitud">
+                            <span class="error" id="error-latitud"></span>
+                        </div>
+                        <div class="coordenada-field">
+                            <label for="longitud">Longitud</label>
+                            <input type="number" value="" id="longitud" step="any" placeholder="Escriba la longitud">
+                            <span class="error" id="error-longitud"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comunidad">Comunidad/Localidad/Colonia/Rancho</label>
+                    <input type="text" value="" id="comunidad" placeholder="Escriba la comunidad">
+                    <span class="error" id="error-comunidad"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="municipio">Municipio</label>
+                    <input type="text" id="municipio" name="municipio" placeholder="Escriba el municipio" autocomplete="off">
+                    <div id="sugerencias-municipio" class="sugerencias-lista"></div>
+                    <span class="error" id="error-municipio"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <input type="text" id="estado" name="estado" placeholder="Escriba el estado" autocomplete="off">
+                    <div id="sugerencias-estado" class="sugerencias-lista"></div>
+                    <span class="error" id="error-estado"></span>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-section section-emergency">
+                <legend>2. Tipo y Naturaleza de la Emergencia / Necesidades <span>(¿Qué pasa y qué se requiere?)</span></legend>
+
+                <div class="form-group">
+                    <label for="categoria_incidente">Categoría o tipo de incidente</label>
+                    <select id="categoria_incidente" name="categoria_incidente">
+                        <option value="">Seleccione una categoría</option>
+                        <option value="Medica">Médica</option>
+                        <option value="Incendio">Incendio</option>
+                        <option value="Inundacion">Inundación</option>
+                        <option value="Deslave">Deslave</option>
+                        <option value="Falta de suministros">Falta de suministros</option>
+                        <option value="Seguridad">Seguridad</option>
+                    </select>
+                    <span class="error" id="error-categoria_incidente"></span>
+                </div>
+
+                <div class="container_2">
+                    <label class="necesidades">Necesidades de la comunidad</label>
+                    <div class="necesidades-lista">
+                        <div class="necesidad-option">
+                            <input type="checkbox" id="n_1" name="Agua">
+                            <label for="n_1">Agua</label>
+                        </div>
+                        <div class="necesidad-option">
+                            <input type="checkbox" id="n_2" name="Alimentación">
+                            <label for="n_2">Alimentación</label>
+                        </div>
+                        <div class="necesidad-option">
+                            <input type="checkbox" id="n_3" name="Medicamentos">
+                            <label for="n_3">Medicamentos</label>
+                        </div>
+                        <div class="necesidad-option">
+                            <input type="checkbox" id="n_4" name="Ropa">
+                            <label for="n_4">Ropa</label>
+                        </div>
+                    </div>
+                    <span class="error" id="error-necesidades"></span>
+
+                    <label for="descripcion" class="textarea">Otros productos o necesidades</label>
+                    <textarea id="descripcion" name="descripcion" rows="4" placeholder="Escriba la necesidad de la comunidad"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="descripcion_situacion">Descripción de la situación</label>
+                    <textarea class="textarea" name="descripcion_situacion" id="descripcion_situacion" rows="4" placeholder="Describa qué ocurre, cuánto lleva sucediendo y qué se requiere"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="riesgos_activos">Riesgos activos</label>
+                    <textarea id="riesgos_activos" name="riesgos_activos" rows="3" placeholder="Cables caídos, agua subiendo, estructuras inestables, falta de comunicación, entre otros"></textarea>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-section section-severity">
+                <legend>3. Nivel de Urgencia y Severidad <span>(¿Qué tan grave es?)</span></legend>
+
+                <div class="form-group">
+                    <label for="nivel_severidad">Nivel de severidad</label>
+                    <select id="nivel_severidad" name="nivel_severidad">
+                        <option value="">Seleccione el nivel de severidad</option>
+                        <option value="Baja">Baja</option>
+                        <option value="Media">Media</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Critica">Crítica</option>
+                    </select>
+                    <span class="error" id="error-nivel_severidad"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="estado_urgencia" class="estado_urgencia">Estado de la urgencia</label>
+                    <select id="estado_urgencia" name="estado_urgencia">
+                        <option value="">Seleccione el estado de la urgencia</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="verificada">Verificada</option>
+                        <option value="atendido">Atendido</option>
+                        <option value="descartada">Descartada</option>
+                    </select>
+                    <span class="error" id="error-estado_urgencia"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="numero_personas">Número de personas afectadas o aproximado</label>
+                    <input type="number" value="" id="numero_personas" min="0" placeholder="Si se conoce">
+                    <span class="error" id="error-numero_personas"></span>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-section section-contact">
+                <legend>4. Información de Contacto y Seguimiento <span>(¿Quién reporta y cuándo?)</span></legend>
+
+                <div class="form-group">
+                    <label for="nombre_informante">Nombre del informante <small>(opcional)</small></label>
+                    <input type="text" id="nombre_informante" name="nombre_informante" placeholder="Nombre de contacto" autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono_informante">Teléfono de contacto <small>(opcional)</small></label>
+                    <input type="tel" id="telefono_informante" name="telefono_informante" placeholder="Teléfono para seguimiento" autocomplete="tel">
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha_creacion">Fecha de creación del reporte</label>
+                    <input type="date" value="" id="fecha_creacion">
+                    <span class="error" id="error-fecha_creacion"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="hora_creacion">Hora de creación del reporte</label>
+                    <input type="time" value="" id="hora_creacion">
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha_actualizacion">Última fecha de modificación</label>
+                    <input type="date" value="" id="fecha_actualizacion">
+                    <span class="error" id="error-fecha_actualizacion"></span>
+                </div>
+
+                <p class="privacy-note">Los datos de contacto se usan únicamente para confirmar información o dar seguimiento, según las reglas de privacidad del sistema.</p>
+            </fieldset>
+        </div>
+
+        <button type="submit" class="btn_enviar">Enviar Reporte</button>
+      </form>
+
+
+    </div>
+
+<!-- Script JS de Leaflet -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script src="formulario.js"></script>
+
+ </body>
+ </html>
